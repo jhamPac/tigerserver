@@ -5,7 +5,7 @@ import (
 	"net/http"
 )
 
-// TigerServer initiates an instance of a power server.
-func TigerServer(w http.ResponseWriter, r *http.Request) {
+// Roar response handler for HTTP.
+func Roar(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprint(w, "20")
 }

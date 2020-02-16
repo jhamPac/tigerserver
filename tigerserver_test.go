@@ -11,7 +11,7 @@ func TestGETPlayers(t *testing.T) {
 		request, _ := http.NewRequest(http.MethodGet, "/players/Casio/", nil)
 		response := httptest.NewRecorder()
 
-		TigerServer(response, request)
+		Roar(response, request)
 
 		got := response.Body.String()
 		want := "20"
