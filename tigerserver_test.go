@@ -8,7 +8,7 @@ import (
 
 func TestGETPlayers(t *testing.T) {
 	t.Run("returns Casio's score", func(t *testing.T) {
-		request, _ := http.NewRequest(http.MethodGet, "/players/Casio/", nil)
+		request, _ := http.NewRequest(http.MethodGet, "/players/Casio", nil)
 		response := httptest.NewRecorder()
 
 		Roar(response, request)
@@ -18,6 +18,20 @@ func TestGETPlayers(t *testing.T) {
 
 		if got != want {
 			t.Errorf("got %q, wanted %q", got, want)
+		}
+	})
+
+	t.Run("returns Laverne's score", func(t *testing.T) {
+		request, _ := http.NewRequest(http.MethodGet, "/players/Laverne", nil)
+		response := httptest.NewRecorder()
+
+		Roar(response, request)
+
+		got := response.Body.String()
+		want := "10"
+
+		if got != want {
+			t.Errorf("got %q wanted %q", got, want)
 		}
 	})
 }
