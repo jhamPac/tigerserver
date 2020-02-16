@@ -13,10 +13,10 @@ type PlayerStore interface {
 
 // TigerServer main server struct.
 type TigerServer struct {
-	store PlayerStore
+	Store PlayerStore
 }
 
 func (t *TigerServer) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	player := strings.TrimPrefix(r.URL.Path, "/players/")
-	fmt.Fprint(w, t.store.GetPlayerScore(player))
+	fmt.Fprint(w, t.Store.GetPlayerScore(player))
 }
