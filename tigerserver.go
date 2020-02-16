@@ -10,7 +10,6 @@ import (
 func Roar(w http.ResponseWriter, r *http.Request) {
 	player := strings.TrimPrefix(r.URL.Path, "/players/")
 	fmt.Fprint(w, getPlayerScore(player))
-
 }
 
 func getPlayerScore(name string) string {
