@@ -1,5 +1,3 @@
 # Tiger Server
 
----
-
-A powerful HTTP server 🐅
+A powerful 🐅 HTTP server implemented in Go
