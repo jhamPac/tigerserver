@@ -18,7 +18,7 @@ func (s *StubPlayerStore) GetPlayerScore(name string) int {
 
 func TestGETPlayers(t *testing.T) {
 	store := StubPlayerStore{
-		map[string]int{
+		scores: map[string]int{
 			"Casio":   20,
 			"Laverne": 10,
 		},
