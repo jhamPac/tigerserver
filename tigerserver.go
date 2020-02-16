@@ -6,20 +6,17 @@ import (
 	"strings"
 )
 
-// Roar response handler for HTTP.
-func Roar(w http.ResponseWriter, r *http.Request) {
-	player := strings.TrimPrefix(r.URL.Path, "/players/")
-	fmt.Fprint(w, getPlayerScore(player))
+// PlayerStore for server methods
+type PlayerStore interface {
+	GetPlayerScore(name string) int
 }
 
-func getPlayerScore(name string) string {
-	if name == "Casio" {
-		return "20"
-	}
+// TigerServer main server struct.
+type TigerServer struct {
+	store PlayerStore
+}
 
-	if name == "Laverne" {
-		return "10"
-	}
-
-	return ""
+func (t *TigerServer) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+	player := strings.TrimPrefix(r.URL.Path, "/players/")
+	fmt.Fprint(w, t.store.GetPlayerScore(player))
 }
