@@ -9,14 +9,18 @@ import (
 // Roar response handler for HTTP.
 func Roar(w http.ResponseWriter, r *http.Request) {
 	player := strings.TrimPrefix(r.URL.Path, "/players/")
+	fmt.Fprint(w, getPlayerScore(player))
 
-	if player == "Casio" {
-		fmt.Fprint(w, "20")
-		return
+}
+
+func getPlayerScore(name string) string {
+	if name == "Casio" {
+		return "20"
 	}
 
-	if player == "Laverne" {
-		fmt.Fprint(w, "10")
-		return
+	if name == "Laverne" {
+		return "10"
 	}
+
+	return ""
 }
