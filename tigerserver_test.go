@@ -35,6 +35,7 @@ func TestGETPlayers(t *testing.T) {
 		got := response.Body.String()
 		want := "20"
 
+		assertStatus(t, response.Code, http.StatusOK)
 		assertResponseBody(t, got, want)
 	})
 
@@ -47,6 +48,7 @@ func TestGETPlayers(t *testing.T) {
 		got := response.Body.String()
 		want := "10"
 
+		assertStatus(t, response.Code, http.StatusOK)
 		assertResponseBody(t, got, want)
 	})
 
@@ -63,6 +65,13 @@ func TestGETPlayers(t *testing.T) {
 			t.Errorf("got status %d but wanted %d", got, want)
 		}
 	})
+}
+
+func assertStatus(t *testing.T, got, want int) {
+	t.Helper()
+	if got != want {
+		t.Errorf("did not get a correct status, got %d but wanted %d", got, want)
+	}
 }
 
 func newGetScoreRequest(name string) *http.Request {
