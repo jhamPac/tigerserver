@@ -77,19 +77,6 @@ func TestStoreWins(t *testing.T) {
 
 	server := &TigerServer{&store}
 
-	t.Run("it returns accepted on POST", func(t *testing.T) {
-		request, _ := http.NewRequest(http.MethodPost, "/player/Casio", nil)
-		response := httptest.NewRecorder()
-
-		server.ServeHTTP(response, request)
-
-		assertStatus(t, response.Code, http.StatusAccepted)
-
-		if len(store.winCalls) != 1 {
-			t.Errorf("got %d calls to RecordWin wanted %d", len(store.winCalls), 1)
-		}
-	})
-
 	t.Run("it records wins on POST", func(t *testing.T) {
 		player := "Casio"
 
@@ -119,6 +106,11 @@ func assertStatus(t *testing.T, got, want int) {
 
 func newGetScoreRequest(name string) *http.Request {
 	req, _ := http.NewRequest(http.MethodGet, fmt.Sprintf("/players/%s", name), nil)
+	return req
+}
+
+func newPostWinRequest(name string) *http.Request {
+	req, _ := http.NewRequest(http.MethodPost, fmt.Sprintf("/players/%s", name), nil)
 	return req
 }
 

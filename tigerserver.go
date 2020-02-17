@@ -20,19 +20,20 @@ type PlayerStore interface {
 func (t *TigerServer) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	switch r.Method {
 	case http.MethodPost:
-		t.processWin(w)
+		t.processWin(w, r)
 	case http.MethodGet:
 		t.showScore(w, r)
 	}
 }
 
-func (t *TigerServer) processWin(w http.ResponseWriter) {
-	t.Store.RecordWin("Howard Baker")
+func (t *TigerServer) processWin(w http.ResponseWriter, r *http.Request) {
+	player := trimPlayerURL(r)
+	t.Store.RecordWin(player)
 	w.WriteHeader(http.StatusAccepted)
 }
 
 func (t *TigerServer) showScore(w http.ResponseWriter, r *http.Request) {
-	player := strings.TrimPrefix(r.URL.Path, "/players/")
+	player := trimPlayerURL(r)
 	score := t.Store.GetPlayerScore(player)
 
 	if score == 0 {
@@ -40,4 +41,9 @@ func (t *TigerServer) showScore(w http.ResponseWriter, r *http.Request) {
 	}
 
 	fmt.Fprint(w, score)
+}
+
+func trimPlayerURL(r *http.Request) string {
+	player := strings.TrimPrefix(r.URL.Path, "/players/")
+	return player
 }
