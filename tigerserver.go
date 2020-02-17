@@ -24,10 +24,16 @@ func CreateTigerServer(store PlayerStore) *TigerServer {
 		http.NewServeMux(),
 	}
 
+	t.router.Handle("/", http.HandlerFunc(t.homeHandler))
 	t.router.Handle("/league", http.HandlerFunc(t.leagueHandler))
 	t.router.Handle("/players/", http.HandlerFunc(t.playersHandler))
 
 	return t
+}
+
+func (t *TigerServer) homeHandler(w http.ResponseWriter, r *http.Request) {
+	w.WriteHeader(http.StatusOK)
+	fmt.Fprint(w, "Welcome to Tiger Server!")
 }
 
 func (t *TigerServer) ServeHTTP(w http.ResponseWriter, r *http.Request) {
