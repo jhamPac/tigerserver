@@ -8,7 +8,7 @@ import (
 
 func TestRecordingWinsAndRetrieveThem(t *testing.T) {
 	store := NewInMemoryPlayerStore()
-	server := TigerServer{store}
+	server := CreateTigerServer(store)
 	player := "Casio"
 
 	server.ServeHTTP(httptest.NewRecorder(), newPostWinRequest(player))

@@ -7,7 +7,8 @@ import (
 
 // TigerServer main server struct.
 type TigerServer struct {
-	Store PlayerStore
+	Store  PlayerStore
+	router *http.ServeMux
 }
 
 // PlayerStore for server methods
@@ -16,12 +17,21 @@ type PlayerStore interface {
 	RecordWin(name string)
 }
 
-func (t *TigerServer) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	router := http.NewServeMux()
-	router.Handle("/league", http.HandlerFunc(t.leagueHandler))
-	router.Handle("/players/", http.HandlerFunc(t.playersHandler))
+// CreateTigerServer is the factory for the main server that creates and sets up routing too
+func CreateTigerServer(store PlayerStore) *TigerServer {
+	t := &TigerServer{
+		store,
+		http.NewServeMux(),
+	}
 
-	router.ServeHTTP(w, r)
+	t.router.Handle("/league", http.HandlerFunc(t.leagueHandler))
+	t.router.Handle("/players/", http.HandlerFunc(t.playersHandler))
+
+	return t
+}
+
+func (t *TigerServer) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+	t.router.ServeHTTP(w, r)
 }
 
 func (t *TigerServer) leagueHandler(w http.ResponseWriter, r *http.Request) {
