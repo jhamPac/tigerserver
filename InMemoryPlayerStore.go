@@ -1,6 +1,6 @@
 package tigerserver
 
-// NewInMemoryPlayerStore is a factory that returns InMemoryPlayerStore
+// NewInMemoryPlayerStore is a factory that returns InMemoryPlayerStore; great example of a factory
 func NewInMemoryPlayerStore() *InMemoryPlayerStore {
 	return &InMemoryPlayerStore{make(map[string]int)}
 }
