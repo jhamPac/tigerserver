@@ -3,7 +3,6 @@ package tigerserver
 import (
 	"fmt"
 	"net/http"
-	"strings"
 )
 
 // TigerServer main server struct.
@@ -18,12 +17,22 @@ type PlayerStore interface {
 }
 
 func (t *TigerServer) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	switch r.Method {
-	case http.MethodPost:
-		t.processWin(w, r)
-	case http.MethodGet:
-		t.showScore(w, r)
-	}
+	router := http.NewServeMux()
+
+	router.Handle("/league", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.WriteHeader(http.StatusOK)
+	}))
+
+	router.Handle("/players/", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		switch r.Method {
+		case http.MethodPost:
+			t.processWin(w, r)
+		case http.MethodGet:
+			t.showScore(w, r)
+		}
+	}))
+
+	router.ServeHTTP(w, r)
 }
 
 func (t *TigerServer) processWin(w http.ResponseWriter, r *http.Request) {
@@ -44,6 +53,6 @@ func (t *TigerServer) showScore(w http.ResponseWriter, r *http.Request) {
 }
 
 func trimPlayerURL(r *http.Request) string {
-	player := strings.TrimPrefix(r.URL.Path, "/players/")
+	player := r.URL.Path[len("/players/"):]
 	return player
 }
