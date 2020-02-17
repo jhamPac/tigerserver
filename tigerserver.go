@@ -17,6 +17,19 @@ type TigerServer struct {
 }
 
 func (t *TigerServer) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+	switch r.Method {
+	case http.MethodPost:
+		t.processWin(w)
+	case http.MethodGet:
+		t.showScore(w, r)
+	}
+}
+
+func (t *TigerServer) processWin(w http.ResponseWriter) {
+	w.WriteHeader(http.StatusAccepted)
+}
+
+func (t *TigerServer) showScore(w http.ResponseWriter, r *http.Request) {
 	player := strings.TrimPrefix(r.URL.Path, "/players/")
 	score := t.Store.GetPlayerScore(player)
 
