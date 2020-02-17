@@ -6,14 +6,15 @@ import (
 	"strings"
 )
 
-// PlayerStore for server methods
-type PlayerStore interface {
-	GetPlayerScore(name string) int
-}
-
 // TigerServer main server struct.
 type TigerServer struct {
 	Store PlayerStore
+}
+
+// PlayerStore for server methods
+type PlayerStore interface {
+	GetPlayerScore(name string) int
+	RecordWin(name string)
 }
 
 func (t *TigerServer) ServeHTTP(w http.ResponseWriter, r *http.Request) {
@@ -26,6 +27,7 @@ func (t *TigerServer) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 }
 
 func (t *TigerServer) processWin(w http.ResponseWriter) {
+	t.Store.RecordWin("Howard Baker")
 	w.WriteHeader(http.StatusAccepted)
 }
 
