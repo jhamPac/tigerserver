@@ -16,6 +16,7 @@ type TigerServer struct {
 type PlayerStore interface {
 	GetPlayerScore(name string) int
 	RecordWin(name string)
+	GetLeague() []Player
 }
 
 // Player represents a user entity
@@ -46,14 +47,15 @@ func (t *TigerServer) homeHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func (t *TigerServer) leagueHandler(w http.ResponseWriter, r *http.Request) {
-	json.NewEncoder(w).Encode(t.getLeagueTable())
+	json.NewEncoder(w).Encode(t.store.GetLeague())
 	w.WriteHeader(http.StatusOK)
 }
 
 func (t *TigerServer) getLeagueTable() []Player {
 	return []Player{
-		{"Myer", 10},
-		{"Baker", 2},
+		{"Wolverine", 22},
+		{"Cyclops", 7},
+		{"Beast", 10},
 	}
 }
 

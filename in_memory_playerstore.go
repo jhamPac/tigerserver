@@ -19,3 +19,8 @@ func (i *InMemoryPlayerStore) RecordWin(name string) {
 func (i *InMemoryPlayerStore) GetPlayerScore(name string) int {
 	return i.Store[name]
 }
+
+// GetLeague returns a slice of Player of in the leagues
+func (i *InMemoryPlayerStore) GetLeague() []Player {
+	return nil
+}
