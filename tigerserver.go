@@ -17,6 +17,12 @@ type PlayerStore interface {
 	RecordWin(name string)
 }
 
+// Player represents a user entity
+type Player struct {
+	Name string
+	Wins int
+}
+
 // CreateTigerServer is the factory for the main server that creates and sets up routing too
 func CreateTigerServer(store PlayerStore) *TigerServer {
 	t := new(TigerServer)
