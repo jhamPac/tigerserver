@@ -47,8 +47,8 @@ func (t *TigerServer) homeHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func (t *TigerServer) leagueHandler(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("content-type", "application/json")
 	json.NewEncoder(w).Encode(t.store.GetLeague())
-	w.WriteHeader(http.StatusOK)
 }
 
 func (t *TigerServer) getLeagueTable() []Player {
