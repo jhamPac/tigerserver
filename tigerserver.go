@@ -46,12 +46,14 @@ func (t *TigerServer) homeHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func (t *TigerServer) leagueHandler(w http.ResponseWriter, r *http.Request) {
-	leagueTable := []Player{
+	json.NewEncoder(w).Encode(t.getLeagueTable())
+	w.WriteHeader(http.StatusOK)
+}
+
+func (t *TigerServer) getLeagueTable() []Player {
+	return []Player{
 		{"Myer", 10},
 	}
-
-	json.NewEncoder(w).Encode(leagueTable)
-	w.WriteHeader(http.StatusOK)
 }
 
 func (t *TigerServer) playersHandler(w http.ResponseWriter, r *http.Request) {
