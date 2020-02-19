@@ -53,6 +53,7 @@ func (t *TigerServer) leagueHandler(w http.ResponseWriter, r *http.Request) {
 func (t *TigerServer) getLeagueTable() []Player {
 	return []Player{
 		{"Myer", 10},
+		{"Baker", 2},
 	}
 }
 
