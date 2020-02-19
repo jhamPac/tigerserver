@@ -1,6 +1,7 @@
 package tigerserver
 
 import (
+	"encoding/json"
 	"fmt"
 	"net/http"
 )
@@ -45,6 +46,11 @@ func (t *TigerServer) homeHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func (t *TigerServer) leagueHandler(w http.ResponseWriter, r *http.Request) {
+	leagueTable := []Player{
+		{"Myer", 10},
+	}
+
+	json.NewEncoder(w).Encode(leagueTable)
 	w.WriteHeader(http.StatusOK)
 }
 

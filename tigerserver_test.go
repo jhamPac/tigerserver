@@ -109,7 +109,6 @@ func TestLeague(t *testing.T) {
 		server.ServeHTTP(response, request)
 
 		var got []Player
-
 		err := json.NewDecoder(response.Body).Decode(&got)
 
 		if err != nil {
