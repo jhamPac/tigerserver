@@ -28,16 +28,12 @@ type Player struct {
 // CreateTigerServer is the factory for the main server that creates and sets up routing too
 func CreateTigerServer(store PlayerStore) *TigerServer {
 	t := new(TigerServer)
-
 	t.store = store
-
 	router := http.NewServeMux()
 	router.Handle("/", http.HandlerFunc(t.homeHandler))
 	router.Handle("/league", http.HandlerFunc(t.leagueHandler))
 	router.Handle("/players/", http.HandlerFunc(t.playersHandler))
-
 	t.Handler = router
-
 	return t
 }
 
@@ -49,14 +45,6 @@ func (t *TigerServer) homeHandler(w http.ResponseWriter, r *http.Request) {
 func (t *TigerServer) leagueHandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("content-type", "application/json")
 	json.NewEncoder(w).Encode(t.store.GetLeague())
-}
-
-func (t *TigerServer) getLeagueTable() []Player {
-	return []Player{
-		{"Wolverine", 22},
-		{"Cyclops", 7},
-		{"Beast", 10},
-	}
 }
 
 func (t *TigerServer) playersHandler(w http.ResponseWriter, r *http.Request) {
