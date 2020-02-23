@@ -15,3 +15,8 @@ func (f *FileSystemPlayerStore) GetLeague() []Player {
 	league, _ := NewLeague(f.database)
 	return league
 }
+
+// GetPlayerScore takes a player's name and returns the score of the player specified
+func (f *FileSystemPlayerStore) GetPlayerScore(name string) int {
+	return 0
+}
