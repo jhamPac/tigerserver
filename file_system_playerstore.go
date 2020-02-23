@@ -1,7 +1,6 @@
 package tigerserver
 
 import (
-	"encoding/json"
 	"io"
 )
 
@@ -12,7 +11,6 @@ type FileSystemPlayerStore struct {
 
 // GetLeague returns a slice of type Player
 func (f *FileSystemPlayerStore) GetLeague() []Player {
-	var league []Player
-	json.NewDecoder(f.database).Decode(&league)
+	league, _ := NewLeague(f.database)
 	return league
 }
