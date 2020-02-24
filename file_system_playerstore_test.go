@@ -37,6 +37,14 @@ func TestFileSystemStore(t *testing.T) {
 			t.Errorf("got %d but wanted %d", got, want)
 		}
 	})
+
+	t.Run("store wins for existing players", func(t *testing.T) {
+		store.RecordWin("Storm")
+		got := store.GetPlayerScore("Storm")
+		want := 11
+
+		assertScoreEquals(t, got, want)
+	})
 }
 
 func createTempFile(t *testing.T, initialData string) (io.ReadWriteSeeker, func()) {
@@ -55,4 +63,11 @@ func createTempFile(t *testing.T, initialData string) (io.ReadWriteSeeker, func(
 	}
 
 	return tmpfile, removeFile
+}
+
+func assertScoreEquals(t *testing.T, got, want int) {
+	t.Helper()
+	if got != want {
+		t.Errorf("got %d but wanted %d", got, want)
+	}
 }
