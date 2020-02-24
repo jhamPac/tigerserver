@@ -1,15 +1,19 @@
 package tigerserver
 
 import (
-	"strings"
+	"io"
+	"io/ioutil"
+	"os"
 	"testing"
 )
 
 func TestFileSystemStore(t *testing.T) {
-	database := strings.NewReader(`[
-			{"Name": "Storm", "Wins": 10},
-			{"Name": "Rogue", "Wins": 30
-			}]`)
+	database, cleanData := createTempFile(t, `[
+		{"Name": "Storm", "Wins": 10},
+		{"Name": "Rogue", "Wins": 30
+		}]`)
+
+	defer cleanData()
 
 	store := FileSystemPlayerStore{database}
 
@@ -21,6 +25,8 @@ func TestFileSystemStore(t *testing.T) {
 		}
 
 		assertLeague(t, got, want)
+		got = store.GetLeague()
+		assertLeague(t, got, want)
 	})
 
 	t.Run("get a player score from a league", func(t *testing.T) {
@@ -31,4 +37,22 @@ func TestFileSystemStore(t *testing.T) {
 			t.Errorf("got %d but wanted %d", got, want)
 		}
 	})
+}
+
+func createTempFile(t *testing.T, initialData string) (io.ReadWriteSeeker, func()) {
+	t.Helper()
+
+	tmpfile, err := ioutil.TempFile("", "db")
+	if err != nil {
+		t.Fatalf("could not create temp file %v", err)
+	}
+
+	tmpfile.Write([]byte(initialData))
+
+	removeFile := func() {
+		tmpfile.Close()
+		os.Remove(tmpfile.Name())
+	}
+
+	return tmpfile, removeFile
 }
