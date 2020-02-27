@@ -7,13 +7,13 @@ import (
 
 // FileSystemPlayerStore implements the PlayerStore interface for TigerServer
 type FileSystemPlayerStore struct {
-	database io.ReadWriteSeeker
+	Database io.ReadWriteSeeker
 }
 
 // GetLeague returns a slice of type Player
 func (f *FileSystemPlayerStore) GetLeague() League {
-	f.database.Seek(0, 0)
-	league, _ := NewLeague(f.database)
+	f.Database.Seek(0, 0)
+	league, _ := NewLeague(f.Database)
 	return league
 }
 
@@ -36,6 +36,6 @@ func (f *FileSystemPlayerStore) RecordWin(name string) {
 		league = append(league, Player{name, 1})
 	}
 
-	f.database.Seek(0, 0)
-	json.NewEncoder(f.database).Encode(league)
+	f.Database.Seek(0, 0)
+	json.NewEncoder(f.Database).Encode(league)
 }
