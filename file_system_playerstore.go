@@ -3,6 +3,7 @@ package tigerserver
 import (
 	"encoding/json"
 	"io"
+	"strings"
 )
 
 // FileSystemPlayerStore implements the PlayerStore interface for TigerServer
@@ -39,7 +40,7 @@ func (f *FileSystemPlayerStore) RecordWin(name string) {
 	if player != nil {
 		player.Wins++
 	} else {
-		f.league = append(f.league, Player{name, 1})
+		f.league = append(f.league, Player{strings.ToLower(name), 1})
 	}
 
 	f.database.Seek(0, 0)
