@@ -11,7 +11,7 @@ func TestRecordingWinsAndRetrieveThem(t *testing.T) {
 	defer cleanDatabase()
 	store := NewFileSystemPlayerStore(database)
 	server := CreateTigerServer(store)
-	player := "Casio"
+	player := "gambit"
 
 	server.ServeHTTP(httptest.NewRecorder(), newPostWinRequest(player))
 	server.ServeHTTP(httptest.NewRecorder(), newPostWinRequest(player))
@@ -32,7 +32,7 @@ func TestRecordingWinsAndRetrieveThem(t *testing.T) {
 
 		got := getLeagueFromResponse(t, response.Body)
 		want := []Player{
-			{"Casio", 3},
+			{"gambit", 3},
 		}
 		assertLeague(t, got, want)
 	})
