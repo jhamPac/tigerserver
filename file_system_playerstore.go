@@ -36,13 +36,13 @@ func (f *FileSystemPlayerStore) GetPlayerScore(name string) int {
 
 // RecordWin incremts the win data for specific player
 func (f *FileSystemPlayerStore) RecordWin(name string) {
-	lowerCasedName := strings.ToLower(name)
-	player := f.league.Find(lowerCasedName)
+	n := strings.ToLower(name)
+	player := f.league.Find(n)
 
 	if player != nil {
 		player.Wins++
 	} else {
-		f.league = append(f.league, Player{Name: lowerCasedName, Wins: 1})
+		f.league = append(f.league, Player{Name: n, Wins: 1})
 	}
 
 	f.database.Seek(0, 0)
