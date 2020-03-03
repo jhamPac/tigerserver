@@ -2,21 +2,21 @@ package tigerserver
 
 import (
 	"encoding/json"
-	"io"
+	"os"
 	"strings"
 )
 
 // FileSystemPlayerStore implements the PlayerStore interface for TigerServer
 type FileSystemPlayerStore struct {
-	database io.Writer
+	database *json.Encoder
 	league   League
 }
 
 // NewFileSystemPlayerStore is a constructor for creating new FileSystemPlayerStore
-func NewFileSystemPlayerStore(database io.ReadWriteSeeker) *FileSystemPlayerStore {
-	database.Seek(0, 0)
-	league, _ := NewLeague(database)
-	return &FileSystemPlayerStore{database: &tape{database}, league: league}
+func NewFileSystemPlayerStore(file *os.File) *FileSystemPlayerStore {
+	file.Seek(0, 0)
+	league, _ := NewLeague(file)
+	return &FileSystemPlayerStore{database: json.NewEncoder(&tape{file}), league: league}
 }
 
 // GetLeague returns a slice of type Player
@@ -44,5 +44,5 @@ func (f *FileSystemPlayerStore) RecordWin(name string) {
 	} else {
 		f.league = append(f.league, Player{Name: n, Wins: 1})
 	}
-	json.NewEncoder(f.database).Encode(f.league)
+	f.database.Encode(f.league)
 }
