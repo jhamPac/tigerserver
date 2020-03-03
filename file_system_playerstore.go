@@ -8,7 +8,7 @@ import (
 
 // FileSystemPlayerStore implements the PlayerStore interface for TigerServer
 type FileSystemPlayerStore struct {
-	database io.ReadWriteSeeker
+	database io.Writer
 	league   League
 }
 
@@ -16,7 +16,7 @@ type FileSystemPlayerStore struct {
 func NewFileSystemPlayerStore(database io.ReadWriteSeeker) *FileSystemPlayerStore {
 	database.Seek(0, 0)
 	league, _ := NewLeague(database)
-	return &FileSystemPlayerStore{database: database, league: league}
+	return &FileSystemPlayerStore{database: &tape{database}, league: league}
 }
 
 // GetLeague returns a slice of type Player
@@ -44,7 +44,5 @@ func (f *FileSystemPlayerStore) RecordWin(name string) {
 	} else {
 		f.league = append(f.league, Player{Name: n, Wins: 1})
 	}
-
-	f.database.Seek(0, 0)
 	json.NewEncoder(f.database).Encode(f.league)
 }
