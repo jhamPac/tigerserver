@@ -9,7 +9,12 @@ import (
 func TestRecordingWinsAndRetrieveThem(t *testing.T) {
 	database, cleanDatabase := createTempFile(t, "")
 	defer cleanDatabase()
-	store := NewFileSystemPlayerStore(database)
+	store, err := NewFileSystemPlayerStore(database)
+
+	if err != nil {
+		t.Fatalf("could not create store %v", err)
+	}
+
 	server := CreateTigerServer(store)
 	player := "gambit"
 

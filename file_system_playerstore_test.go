@@ -14,7 +14,7 @@ func TestFileSystemStore(t *testing.T) {
 
 	defer cleanData()
 
-	store := NewFileSystemPlayerStore(database)
+	store, _ := NewFileSystemPlayerStore(database)
 
 	t.Run("/league from a reader", func(t *testing.T) {
 		got := store.GetLeague()
