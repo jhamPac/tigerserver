@@ -12,7 +12,7 @@ func TestRecordingWinsAndRetrieveThem(t *testing.T) {
 	store, err := NewFileSystemPlayerStore(database)
 
 	if err != nil {
-		t.Fatalf("could not create store %v", err)
+		t.Fatalf("%v", err)
 	}
 
 	server := CreateTigerServer(store)
