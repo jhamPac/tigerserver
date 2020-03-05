@@ -49,6 +49,7 @@ func initializePlayerDBFile(file *os.File) error {
 
 // GetLeague returns a slice of type Player
 func (f *FileSystemPlayerStore) GetLeague() League {
+	// sort by most wins
 	sort.Slice(f.league, func(i, j int) bool {
 		return f.league[i].Wins > f.league[j].Wins
 	})
