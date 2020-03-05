@@ -24,9 +24,9 @@ func TestFileSystemStore(t *testing.T) {
 	t.Run("/league from a reader", func(t *testing.T) {
 		got := store.GetLeague()
 		want := []Player{
-			{"storm", 10},
-			{"rogue", 30},
 			{"xavior", 50},
+			{"rogue", 30},
+			{"storm", 10},
 		}
 
 		assertLeague(t, got, want)
@@ -56,6 +56,20 @@ func TestFileSystemStore(t *testing.T) {
 		got := store.GetPlayerScore("Cyclops")
 		want := 1
 		assertScoreEquals(t, got, want)
+	})
+
+	t.Run("league sorted", func(t *testing.T) {
+		got := store.GetLeague()
+		want := []Player{
+			{"xavior", 50},
+			{"rogue", 30},
+			{"storm", 11},
+			{"cyclops", 1},
+		}
+
+		assertLeague(t, got, want)
+		got = store.GetLeague()
+		assertLeague(t, got, want)
 	})
 }
 
