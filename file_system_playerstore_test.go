@@ -8,8 +8,8 @@ import (
 
 func TestFileSystemStore(t *testing.T) {
 	database, cleanData := createTempFile(t, `[
-		{"Name": "storm", "Wins": 10},
-		{"Name": "rogue", "Wins": 30
+			{"Name": "storm", "Wins": 10},
+			{"Name": "rogue", "Wins": 30
 		}]`)
 
 	defer cleanData()
