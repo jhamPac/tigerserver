@@ -42,4 +42,15 @@ func TestRecordingWinsAndRetrieveThem(t *testing.T) {
 		}
 		assertLeague(t, got, want)
 	})
+
+	t.Run("works with an empty file", func(t *testing.T) {
+		database, cleanDatabase := createTempFile(t, "")
+		defer cleanDatabase()
+
+		_, err := NewFileSystemPlayerStore(database)
+
+		if err != nil {
+			t.Fatalf("should have not gotten an error: %v", err)
+		}
+	})
 }
