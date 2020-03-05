@@ -8,19 +8,25 @@ import (
 
 func TestFileSystemStore(t *testing.T) {
 	database, cleanData := createTempFile(t, `[
-			{"Name": "storm", "Wins": 10},
-			{"Name": "rogue", "Wins": 30
-		}]`)
+				{"Name": "storm", "Wins": 10},
+				{"Name": "rogue", "Wins": 30},
+				{"Name": "xavior", "Wins": 50}
+			]`)
 
 	defer cleanData()
 
-	store, _ := NewFileSystemPlayerStore(database)
+	store, err := NewFileSystemPlayerStore(database)
+
+	if err != nil {
+		t.Fatalf("store construction failed with: %v", err)
+	}
 
 	t.Run("/league from a reader", func(t *testing.T) {
 		got := store.GetLeague()
 		want := []Player{
 			{"storm", 10},
 			{"rogue", 30},
+			{"xavior", 50},
 		}
 
 		assertLeague(t, got, want)
