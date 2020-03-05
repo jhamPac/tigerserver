@@ -7,7 +7,10 @@ import (
 )
 
 func TestRecordingWinsAndRetrieveThem(t *testing.T) {
-	database, cleanDatabase := createTempFile(t, "")
+	database, cleanDatabase := createTempFile(t, `[
+			{"Name": "gambit", "Wins": 0
+		}]`)
+
 	defer cleanDatabase()
 	store, err := NewFileSystemPlayerStore(database)
 
