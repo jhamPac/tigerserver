@@ -3,11 +3,11 @@ package tigerserver
 import "testing"
 
 func TestCLI(t *testing.T) {
-	playerStore := &StubPlayerStore{}
-	cli := &CLI{playerStore}
+	store := &StubPlayerStore{}
+	cli := &CLI{store}
 	cli.PlayPoker()
 
-	if len(playerStore.winCalls) != 1 {
+	if len(store.winCalls) != 1 {
 		t.Fatal("expected a win but did not get any")
 	}
 }
