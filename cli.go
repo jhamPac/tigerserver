@@ -1,6 +1,10 @@
 package tigerserver
 
-import "io"
+import (
+	"bufio"
+	"io"
+	"strings"
+)
 
 // CLI can make calls to the server via terminal client
 type CLI struct {
@@ -10,5 +14,11 @@ type CLI struct {
 
 // PlayPoker initiates a game
 func (c *CLI) PlayPoker() {
-	c.store.RecordWin("Cable")
+	reader := bufio.NewScanner(c.in)
+	reader.Scan()
+	c.store.RecordWin(extractWinner(reader.Text()))
+}
+
+func extractWinner(userInput string) string {
+	return strings.Replace(userInput, " wins", "", 1)
 }
