@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"io"
 	"strings"
+	"time"
 )
 
 // CLI can make calls to the server via terminal client
@@ -12,8 +13,13 @@ type CLI struct {
 	in    *bufio.Scanner
 }
 
+// BlindAlerter interface for any Alert creator
+type BlindAlerter interface {
+	ScheduleAlertAt(duration time.Duration, amount int)
+}
+
 // NewCLI factory function for object
-func NewCLI(store PlayerStore, i io.Reader) *CLI {
+func NewCLI(store PlayerStore, i io.Reader, alerter BlindAlerter) *CLI {
 	return &CLI{store: store, in: bufio.NewScanner(i)}
 }
 

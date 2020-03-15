@@ -9,7 +9,7 @@ func TestCLI(t *testing.T) {
 	t.Run("record Cable win from user input", func(t *testing.T) {
 		in := strings.NewReader("Cable wins\n")
 		store := &StubPlayerStore{}
-		cli := NewCLI(store, in)
+		cli := NewCLI(store, in, &SpyBlindAlerter{})
 		cli.PlayPoker()
 
 		assertPlayerWin(t, store, "Cable")
@@ -19,7 +19,7 @@ func TestCLI(t *testing.T) {
 		in := strings.NewReader("Bishop wins\n")
 		store := &StubPlayerStore{}
 
-		cli := NewCLI(store, in)
+		cli := NewCLI(store, in, &SpyBlindAlerter{})
 		cli.PlayPoker()
 
 		assertPlayerWin(t, store, "Bishop")
@@ -33,7 +33,7 @@ func TestCLI(t *testing.T) {
 		cli := NewCLI(store, in, blindAlerter)
 		cli.PlayPoker()
 
-		if len(blindAlerter.alerts) != {
+		if len(blindAlerter.alerts) != 1 {
 			t.Fatal("expected a blind alert to be scheduled")
 		}
 	})
