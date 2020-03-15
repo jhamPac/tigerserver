@@ -10,6 +10,7 @@ import (
 	"os"
 	"reflect"
 	"testing"
+	"time"
 )
 
 // StubPlayerStore for mocking tests
@@ -33,6 +34,20 @@ func (s *StubPlayerStore) RecordWin(name string) {
 // GetLeague returns League slice
 func (s *StubPlayerStore) GetLeague() League {
 	return s.league
+}
+
+type SpyBlindAlerter struct {
+	alerts []struct {
+		scheduledAt time.Duration
+		amount      int
+	}
+}
+
+func (s *SpyBlindAlerter) ScheduleAlertAt(duration time.Duration, amount int) {
+	s.alerts = append(s.alerts, struct {
+		scheduledAt time.Duration
+		amount      int
+	}{duration, amount})
 }
 
 func assertStatus(t *testing.T, got, want int) {
