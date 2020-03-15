@@ -9,16 +9,25 @@ import (
 // CLI can make calls to the server via terminal client
 type CLI struct {
 	store PlayerStore
-	in    io.Reader
+	in    *bufio.Scanner
+}
+
+// NewCLI factory function for object
+func NewCLI(store PlayerStore, i io.Reader) *CLI {
+	return &CLI{store: store, in: bufio.NewScanner(i)}
 }
 
 // PlayPoker initiates a game
 func (c *CLI) PlayPoker() {
-	reader := bufio.NewScanner(c.in)
-	reader.Scan()
-	c.store.RecordWin(extractWinner(reader.Text()))
+	userInput := c.readLine()
+	c.store.RecordWin(extractWinner(userInput))
 }
 
 func extractWinner(userInput string) string {
 	return strings.Replace(userInput, " wins", "", 1)
+}
+
+func (c *CLI) readLine() string {
+	c.in.Scan()
+	return c.in.Text()
 }
