@@ -9,8 +9,9 @@ import (
 
 // CLI can make calls to the server via terminal client
 type CLI struct {
-	store PlayerStore
-	in    *bufio.Scanner
+	store   PlayerStore
+	in      *bufio.Scanner
+	alerter BlindAlerter
 }
 
 // BlindAlerter interface for any Alert creator
@@ -20,11 +21,12 @@ type BlindAlerter interface {
 
 // NewCLI factory function for object
 func NewCLI(store PlayerStore, i io.Reader, alerter BlindAlerter) *CLI {
-	return &CLI{store: store, in: bufio.NewScanner(i)}
+	return &CLI{store: store, in: bufio.NewScanner(i), alerter: alerter}
 }
 
 // PlayPoker initiates a game
 func (c *CLI) PlayPoker() {
+	c.alerter.ScheduleAlertAt(5*time.Second, 100)
 	userInput := c.readLine()
 	c.store.RecordWin(extractWinner(userInput))
 }
