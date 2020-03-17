@@ -53,8 +53,8 @@ func TestCLI(t *testing.T) {
 			expectedAmount       int
 		}{
 			{0 * time.Second, 100},
-			{10 * time.Second, 200},
-			{20 * time.Second, 300},
+			{10 * time.Minute, 200},
+			{20 * time.Minute, 300},
 			{30 * time.Minute, 400},
 			{40 * time.Minute, 500},
 			{50 * time.Minute, 600},
