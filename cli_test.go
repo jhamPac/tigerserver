@@ -35,7 +35,7 @@ func TestCLI(t *testing.T) {
 		cli := NewCLI(store, in, blindAlerter)
 		cli.PlayPoker()
 
-		if len(blindAlerter.alerts) != 1 {
+		if len(blindAlerter.alerts) <= 1 {
 			t.Fatal("expected a blind alert to be scheduled")
 		}
 	})
