@@ -36,20 +36,23 @@ func (s *StubPlayerStore) GetLeague() League {
 	return s.league
 }
 
+type scheduledAlert struct {
+	at     time.Duration
+	amount int
+}
+
+func (s scheduledAlert) String() string {
+	return fmt.Sprintf("%d chips at %v", s.amount, s.at)
+}
+
 // SpyBlindAlerter mock for alerter for the CLI object
 type SpyBlindAlerter struct {
-	alerts []struct {
-		scheduledAt time.Duration
-		amount      int
-	}
+	alerts []scheduledAlert
 }
 
 // ScheduleAlertAt schedules an alert for tracking
 func (s *SpyBlindAlerter) ScheduleAlertAt(duration time.Duration, amount int) {
-	s.alerts = append(s.alerts, struct {
-		scheduledAt time.Duration
-		amount      int
-	}{duration, amount})
+	s.alerts = append(s.alerts, scheduledAlert{duration, amount})
 }
 
 func assertStatus(t *testing.T, got, want int) {
@@ -75,6 +78,13 @@ func assertPlayerWin(t *testing.T, store *StubPlayerStore, winner string) {
 
 	if store.winCalls[0] != winner {
 		t.Errorf("did not store the correct winner, got %q but wanted %q", store.winCalls[0], winner)
+	}
+}
+
+func assertScheduledAlert(t *testing.T, got, want scheduledAlert) {
+	t.Helper()
+	if got != want {
+		t.Errorf("got %+v but wanted %+v", got, want)
 	}
 }
 
