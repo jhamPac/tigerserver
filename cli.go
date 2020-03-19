@@ -14,11 +14,6 @@ type CLI struct {
 	alerter BlindAlerter
 }
 
-// BlindAlerter interface for any Alert creator
-type BlindAlerter interface {
-	ScheduleAlertAt(duration time.Duration, amount int)
-}
-
 // NewCLI factory function for object
 func NewCLI(store PlayerStore, i io.Reader, alerter BlindAlerter) *CLI {
 	return &CLI{store: store, in: bufio.NewScanner(i), alerter: alerter}
