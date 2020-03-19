@@ -2,6 +2,7 @@ package tigerserver
 
 import (
 	"bufio"
+	"fmt"
 	"io"
 	"strings"
 	"time"
@@ -11,16 +12,18 @@ import (
 type CLI struct {
 	store   PlayerStore
 	in      *bufio.Scanner
+	out     io.Writer
 	alerter BlindAlerter
 }
 
 // NewCLI factory function for object
-func NewCLI(store PlayerStore, i io.Reader, alerter BlindAlerter) *CLI {
-	return &CLI{store: store, in: bufio.NewScanner(i), alerter: alerter}
+func NewCLI(store PlayerStore, i io.Reader, o io.Writer, alerter BlindAlerter) *CLI {
+	return &CLI{store: store, in: bufio.NewScanner(i), out: o, alerter: alerter}
 }
 
 // PlayPoker initiates a game
 func (c *CLI) PlayPoker() {
+	fmt.Fprint(c.out, "Please enter the number of players: ")
 	c.scheduleBlindAlerts()
 	userInput := c.readLine()
 	c.store.RecordWin(extractWinner(userInput))
@@ -32,7 +35,7 @@ func (c *CLI) scheduleBlindAlerts() {
 
 	for _, blind := range blinds {
 		c.alerter.ScheduleAlertAt(blindTime, blind)
-		blindTime = blindTime + 10*time.Second
+		blindTime = blindTime + 10*time.Minute
 	}
 }
 
