@@ -15,8 +15,8 @@ type BlindAlerter interface {
 type BlindAlerterFunc func(duration time.Duration, amount int)
 
 // ScheduleAlertAt implements the type
-func (a BlindAlerterFunc) ScheduleAlertAt(duration time.Duration, amount int) {
-	a(duration, amount)
+func (fn BlindAlerterFunc) ScheduleAlertAt(duration time.Duration, amount int) {
+	fn(duration, amount)
 }
 
 // StdOutAlerter pushes the blind output to stdout
