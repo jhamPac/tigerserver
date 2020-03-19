@@ -21,6 +21,6 @@ func main() {
 	fmt.Println("Let's enter the MATRIX")
 	fmt.Println("Type {Name} wins to record a win")
 
-	game := ts.NewCLI(store, os.Stdin)
+	game := ts.NewCLI(store, os.Stdin, ts.BlindAlerterFunc(ts.StdOutAlerter))
 	game.PlayPoker()
 }

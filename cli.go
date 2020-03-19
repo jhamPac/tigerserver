@@ -32,7 +32,7 @@ func (c *CLI) scheduleBlindAlerts() {
 
 	for _, blind := range blinds {
 		c.alerter.ScheduleAlertAt(blindTime, blind)
-		blindTime = blindTime + 10*time.Minute
+		blindTime = blindTime + 10*time.Second
 	}
 }
 
