@@ -1,6 +1,7 @@
 package tigerserver
 
 import (
+	"bytes"
 	"fmt"
 	"strings"
 	"testing"
@@ -71,6 +72,22 @@ func TestCLI(t *testing.T) {
 				got := blindAlerter.alerts[i]
 				assertScheduledAlert(t, got, want)
 			})
+		}
+	})
+
+	t.Run("it prompts the user to enter the number of players", func(t *testing.T) {
+		ba := &SpyBlindAlerter{}
+		store := &StubPlayerStore{}
+		stdin := &bytes.Buffer{}
+		stdout := &bytes.Buffer{}
+
+		cli := NewCLI(store, stdin, stdout, ba)
+
+		got := stdout.String()
+		want := "Please enter the number of players: "
+
+		if got != want {
+			t.Errorf("got %q but wanted %q", got, want)
 		}
 	})
 }
