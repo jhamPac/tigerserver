@@ -11,10 +11,10 @@ type BlindAlerter interface {
 	ScheduleAlertAt(duration time.Duration, amount int)
 }
 
-// BlindAlerterFunc type for any func instead of a stuct
+// BlindAlerterFunc allow you to implement BlindAlerter with a function
 type BlindAlerterFunc func(duration time.Duration, amount int)
 
-// ScheduleAlertAt implements the type
+// ScheduleAlertAt is BlindAlerterFunc implementation of BlindAlerter
 func (fn BlindAlerterFunc) ScheduleAlertAt(duration time.Duration, amount int) {
 	fn(duration, amount)
 }
