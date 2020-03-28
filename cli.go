@@ -15,11 +15,11 @@ const PlayerPrompt = "Please enter the number of player: "
 type CLI struct {
 	in   *bufio.Scanner
 	out  io.Writer
-	game Game
+	game *Game
 }
 
 // NewCLI factory function for object
-func NewCLI(i io.Reader, o io.Writer, g Game) *CLI {
+func NewCLI(i io.Reader, o io.Writer, g *Game) *CLI {
 	return &CLI{in: bufio.NewScanner(i), out: o, game: g}
 }
 

@@ -16,7 +16,10 @@ func TestCLI(t *testing.T) {
 	t.Run("record Cable win from user input", func(t *testing.T) {
 		in := strings.NewReader("Cable wins\n")
 		store := &StubPlayerStore{}
-		cli := NewCLI(store, in, dummyStdout, dummyBlindAlerter)
+		blindAlerter := dummyBlindAlerter
+		game := NewGame(blindAlerter, store)
+
+		cli := NewCLI(in, dummyStdout, game)
 		cli.PlayPoker()
 
 		assertPlayerWin(t, store, "Cable")
@@ -25,8 +28,10 @@ func TestCLI(t *testing.T) {
 	t.Run("record Bishop win from user input", func(t *testing.T) {
 		in := strings.NewReader("Bishop wins\n")
 		store := &StubPlayerStore{}
+		blindAlerter := dummyBlindAlerter
+		game := NewGame(blindAlerter, store)
 
-		cli := NewCLI(store, in, dummyStdout, dummyBlindAlerter)
+		cli := NewCLI(in, dummyStdout, game)
 		cli.PlayPoker()
 
 		assertPlayerWin(t, store, "Bishop")
@@ -36,8 +41,9 @@ func TestCLI(t *testing.T) {
 		in := strings.NewReader("Sabertooth wins\n")
 		store := &StubPlayerStore{}
 		blindAlerter := &SpyBlindAlerter{}
+		game := NewGame(blindAlerter, store)
 
-		cli := NewCLI(store, in, dummyStdout, blindAlerter)
+		cli := NewCLI(in, dummyStdout, game)
 		cli.PlayPoker()
 
 		if len(blindAlerter.alerts) <= 1 {
@@ -49,8 +55,9 @@ func TestCLI(t *testing.T) {
 		in := strings.NewReader("Storm wins\n")
 		store := &StubPlayerStore{}
 		blindAlerter := &SpyBlindAlerter{}
+		game := NewGame(blindAlerter, store)
 
-		cli := NewCLI(store, in, dummyStdout, blindAlerter)
+		cli := NewCLI(in, dummyStdout, game)
 		cli.PlayPoker()
 
 		cases := []scheduledAlert{
@@ -84,8 +91,9 @@ func TestCLI(t *testing.T) {
 		in := strings.NewReader("7\n")
 		stdout := &bytes.Buffer{}
 		blindAlerter := &SpyBlindAlerter{}
+		game := NewGame(blindAlerter, store)
 
-		cli := NewCLI(store, in, stdout, blindAlerter)
+		cli := NewCLI(in, stdout, game)
 		cli.PlayPoker()
 
 		got := stdout.String()
