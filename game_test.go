@@ -30,6 +30,23 @@ func TestGame_Start(t *testing.T) {
 
 		checkSchedulingCases(cases, t, blindAlerter)
 	})
+
+	t.Run("schedules alerts on game start for 7 players", func(t *testing.T) {
+		ba := &SpyBlindAlerter{}
+		store := &StubPlayerStore{}
+		game := NewGame(ba, store)
+
+		game.Start(7)
+
+		cases := []scheduledAlert{
+			{at: 0 * time.Second, amount: 100},
+			{at: 12 * time.Minute, amount: 200},
+			{at: 24 * time.Minute, amount: 300},
+			{at: 36 * time.Minute, amount: 400},
+		}
+
+		checkSchedulingCases(cases, t, ba)
+	})
 }
 
 func checkSchedulingCases(cases []scheduledAlert, t *testing.T, blindAlerter *SpyBlindAlerter) {
