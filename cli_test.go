@@ -11,6 +11,26 @@ var dummyStdin = &bytes.Buffer{}
 var dummyStdout = &bytes.Buffer{}
 
 func TestCLI(t *testing.T) {
+	t.Run("it prompts the user to enter the number of players and starts the game", func(t *testing.T) {
+		in := strings.NewReader("7\n")
+		stdout := &bytes.Buffer{}
+		game := &GameSpy{}
+
+		cli := NewCLI(in, stdout, game)
+		cli.PlayPoker()
+
+		gotPrompt := stdout.String()
+		wantPrompt := PlayerPrompt
+
+		if gotPrompt != wantPrompt {
+			t.Errorf("got %q but wanted %q", gotPrompt, wantPrompt)
+		}
+
+		if game.StartedWith != 7 {
+			t.Errorf("wanted Start called with 7 but got %d", game.StartedWith)
+		}
+	})
+
 	t.Run("record Cable win from user input", func(t *testing.T) {
 		in := strings.NewReader("1\nCable wins\n")
 		game := &GameSpy{}
