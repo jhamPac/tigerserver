@@ -55,6 +55,22 @@ func (s *SpyBlindAlerter) ScheduleAlertAt(duration time.Duration, amount int) {
 	s.alerts = append(s.alerts, scheduledAlert{duration, amount})
 }
 
+// GameSpy is a mock for testing the Game interface
+type GameSpy struct {
+	StartedWith  int
+	FinishedWith string
+}
+
+// Start is GameSpy's version of starting a game
+func (g *GameSpy) Start(numberOfplayers int) {
+	g.StartedWith = numberOfplayers
+}
+
+// Finish is GameSpy's version fo Finish and recording a winner
+func (g *GameSpy) Finish(winner string) {
+	g.FinishedWith = winner
+}
+
 func assertStatus(t *testing.T, got, want int) {
 	t.Helper()
 	if got != want {
