@@ -55,17 +55,23 @@ func TestCLI(t *testing.T) {
 		}
 	})
 
-	t.Run("it schedules printing of blind values", func(t *testing.T) {
-		in := strings.NewReader("Sabertooth wins\n")
-		store := &StubPlayerStore{}
-		blindAlerter := &SpyBlindAlerter{}
-		game := NewTexas(blindAlerter, store)
+	t.Run("it prints an error when a on numeric value is entered and does not start the game", func(t *testing.T) {
+		in := strings.NewReader("Pies\n")
+		stdout := &bytes.Buffer{}
+		game := &GameSpy{}
 
-		cli := NewCLI(in, dummyStdout, game)
+		cli := NewCLI(in, stdout, game)
 		cli.PlayPoker()
 
-		if len(blindAlerter.alerts) <= 1 {
-			t.Fatal("expected a blind alert to be scheduled")
+		if game.StartCalled {
+			t.Errorf("game should not have started!")
+		}
+
+		gotPrompt := stdout.String()
+		wantPrompt := PlayerPrompt + "Please enter a number!"
+
+		if gotPrompt != wantPrompt {
+			t.Errorf("got %q but wanted %q", gotPrompt, wantPrompt)
 		}
 	})
 }

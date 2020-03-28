@@ -57,12 +57,14 @@ func (s *SpyBlindAlerter) ScheduleAlertAt(duration time.Duration, amount int) {
 
 // GameSpy is a mock for testing the Game interface
 type GameSpy struct {
+	StartCalled  bool
 	StartedWith  int
 	FinishedWith string
 }
 
 // Start is GameSpy's version of starting a game
 func (g *GameSpy) Start(numberOfplayers int) {
+	g.StartCalled = true
 	g.StartedWith = numberOfplayers
 }
 
