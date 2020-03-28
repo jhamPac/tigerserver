@@ -14,7 +14,7 @@ var dummyStdout = &bytes.Buffer{}
 
 func TestCLI(t *testing.T) {
 	t.Run("record Cable win from user input", func(t *testing.T) {
-		in := strings.NewReader("Cable wins\n")
+		in := strings.NewReader("1\nCable wins\n")
 		store := &StubPlayerStore{}
 		blindAlerter := dummyBlindAlerter
 		game := NewGame(blindAlerter, store)
@@ -26,7 +26,7 @@ func TestCLI(t *testing.T) {
 	})
 
 	t.Run("record Bishop win from user input", func(t *testing.T) {
-		in := strings.NewReader("Bishop wins\n")
+		in := strings.NewReader("1\nBishop wins\n")
 		store := &StubPlayerStore{}
 		blindAlerter := dummyBlindAlerter
 		game := NewGame(blindAlerter, store)
