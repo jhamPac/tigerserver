@@ -49,6 +49,17 @@ func TestGame_Start(t *testing.T) {
 	})
 }
 
+func TestGame_Finish(t *testing.T) {
+	ba := &SpyBlindAlerter{}
+	store := &StubPlayerStore{}
+	game := NewGame(ba, store)
+
+	winner := "Magneto"
+
+	game.Finish(winner)
+	assertPlayerWin(t, store, winner)
+}
+
 func checkSchedulingCases(cases []scheduledAlert, t *testing.T, blindAlerter *SpyBlindAlerter) {
 	for i, want := range cases {
 		t.Run(fmt.Sprint(want), func(t *testing.T) {
