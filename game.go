@@ -8,6 +8,11 @@ type Game struct {
 	store   PlayerStore
 }
 
+// NewGame creates and returns a Game struct
+func NewGame(alerter BlindAlerter, store PlayerStore) *Game {
+	return &Game{alerter: alerter, store: store}
+}
+
 // Start invokes a game and blindalerter call
 func (g *Game) Start(numberOfPlayers int) {
 	blindIncrement := time.Duration(5+numberOfPlayers) * time.Minute
