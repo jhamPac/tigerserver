@@ -10,24 +10,6 @@ var dummyBlindAlerter = &SpyBlindAlerter{}
 var dummyStdin = &bytes.Buffer{}
 var dummyStdout = &bytes.Buffer{}
 
-// GameSpy is a mock for testing the Game interface
-type GameSpy struct {
-	StartCalled  bool
-	StartedWith  int
-	FinishedWith string
-}
-
-// Start is GameSpy's version of starting a game
-func (g *GameSpy) Start(numberOfplayers int) {
-	g.StartCalled = true
-	g.StartedWith = numberOfplayers
-}
-
-// Finish is GameSpy's version fo Finish and recording a winner
-func (g *GameSpy) Finish(winner string) {
-	g.FinishedWith = winner
-}
-
 func TestCLI(t *testing.T) {
 	t.Run("it prompts the user to enter the number of players and starts the game", func(t *testing.T) {
 		in := strings.NewReader("7\n")
