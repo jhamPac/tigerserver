@@ -18,8 +18,6 @@ func main() {
 	}
 	defer close()
 
-	fmt.Println("Let's enter the MATRIX")
-	fmt.Println("Type {Name} wins to record a win")
 	game := ts.NewTexas(ts.BlindAlerterFunc(ts.StdOutAlerter), store)
 	cli := ts.NewCLI(os.Stdin, os.Stdout, game)
 
