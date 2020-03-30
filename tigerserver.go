@@ -65,7 +65,7 @@ func (t *TigerServer) processWin(w http.ResponseWriter, r *http.Request) {
 }
 
 func (t *TigerServer) game(w http.ResponseWriter, r *http.Request) {
-	tmpl, err := template.ParseFiles("game.html")
+	tmpl, err := template.ParseFiles("cmd/webserver/game.html")
 
 	if err != nil {
 		http.Error(w, fmt.Sprintf("problem loading template %s", err.Error()), http.StatusInternalServerError)

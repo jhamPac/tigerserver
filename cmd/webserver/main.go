@@ -15,7 +15,6 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-
 	defer close()
 
 	server := ts.CreateTigerServer(store)
