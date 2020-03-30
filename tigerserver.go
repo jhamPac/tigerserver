@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"net/http"
 	"text/template"
+
+	"github.com/gorilla/websocket"
 )
 
 // TigerServer main server struct.
@@ -35,6 +37,7 @@ func CreateTigerServer(store PlayerStore) *TigerServer {
 	router.Handle("/league", http.HandlerFunc(t.leagueHandler))
 	router.Handle("/players/", http.HandlerFunc(t.playersHandler))
 	router.Handle("/game", http.HandlerFunc(t.game))
+	router.Handle("/ws", http.HandlerFunc(t.webSocket))
 	t.Handler = router
 	return t
 }
@@ -65,13 +68,21 @@ func (t *TigerServer) processWin(w http.ResponseWriter, r *http.Request) {
 }
 
 func (t *TigerServer) game(w http.ResponseWriter, r *http.Request) {
-	tmpl, err := template.ParseFiles("cmd/webserver/game.html")
+	tmpl, err := template.ParseFiles("./cmd/webserver/game.html")
 
 	if err != nil {
 		http.Error(w, fmt.Sprintf("problem loading template %s", err.Error()), http.StatusInternalServerError)
 	}
 
 	tmpl.Execute(w, nil)
+}
+
+func (t *TigerServer) webSocket(w http.ResponseWriter, r *http.Request) {
+	upgrader := websocket.Upgrader{
+		ReadBufferSize:  1024,
+		WriteBufferSize: 1024,
+	}
+	upgrader.Upgrade(w, r, nil)
 }
 
 func (t *TigerServer) showScore(w http.ResponseWriter, r *http.Request) {
