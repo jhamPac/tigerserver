@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"text/template"
 )
 
 // TigerServer main server struct.
@@ -64,7 +65,13 @@ func (t *TigerServer) processWin(w http.ResponseWriter, r *http.Request) {
 }
 
 func (t *TigerServer) game(w http.ResponseWriter, r *http.Request) {
-	w.WriteHeader(http.StatusOK)
+	tmpl, err := template.ParseFiles("game.html")
+
+	if err != nil {
+		http.Error(w, fmt.Sprintf("problem loading template %s", err.Error()), http.StatusInternalServerError)
+	}
+
+	tmpl.Execute(w, nil)
 }
 
 func (t *TigerServer) showScore(w http.ResponseWriter, r *http.Request) {
