@@ -116,6 +116,11 @@ func newPostWinRequest(name string) *http.Request {
 	return req
 }
 
+func newGameRequest() *http.Request {
+	req, _ := http.NewRequest(http.MethodGet, "/game", nil)
+	return req
+}
+
 func assertResponseBody(t *testing.T, got, want string) {
 	t.Helper()
 	if got != want {

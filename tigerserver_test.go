@@ -104,7 +104,7 @@ func TestGame(t *testing.T) {
 		store := &StubPlayerStore{}
 		server := CreateTigerServer(store)
 
-		request, _ := http.NewRequest(http.MethodGet, "/game", nil)
+		request := newGameRequest()
 		response := httptest.NewRecorder()
 
 		server.ServeHTTP(response, request)
