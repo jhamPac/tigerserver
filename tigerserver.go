@@ -33,6 +33,7 @@ func CreateTigerServer(store PlayerStore) *TigerServer {
 	router.Handle("/", http.HandlerFunc(t.homeHandler))
 	router.Handle("/league", http.HandlerFunc(t.leagueHandler))
 	router.Handle("/players/", http.HandlerFunc(t.playersHandler))
+	router.Handle("/game", http.HandlerFunc(t.game))
 	t.Handler = router
 	return t
 }
@@ -60,6 +61,10 @@ func (t *TigerServer) processWin(w http.ResponseWriter, r *http.Request) {
 	player := trimPlayerURL(r)
 	t.store.RecordWin(player)
 	w.WriteHeader(http.StatusAccepted)
+}
+
+func (t *TigerServer) game(w http.ResponseWriter, r *http.Request) {
+	w.WriteHeader(http.StatusOK)
 }
 
 func (t *TigerServer) showScore(w http.ResponseWriter, r *http.Request) {
