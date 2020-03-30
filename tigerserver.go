@@ -28,6 +28,11 @@ type Player struct {
 	Wins int
 }
 
+var upgrader = websocket.Upgrader{
+	ReadBufferSize:  1024,
+	WriteBufferSize: 1024,
+}
+
 // CreateTigerServer is the factory for the main server that creates and sets up routing too
 func CreateTigerServer(store PlayerStore) *TigerServer {
 	t := new(TigerServer)
@@ -78,10 +83,6 @@ func (t *TigerServer) game(w http.ResponseWriter, r *http.Request) {
 }
 
 func (t *TigerServer) webSocket(w http.ResponseWriter, r *http.Request) {
-	upgrader := websocket.Upgrader{
-		ReadBufferSize:  1024,
-		WriteBufferSize: 1024,
-	}
 	conn, _ := upgrader.Upgrade(w, r, nil)
 	_, winnerMsg, _ := conn.ReadMessage()
 	t.store.RecordWin(string(winnerMsg))
