@@ -18,7 +18,7 @@ func main() {
 	}
 	defer close()
 
-	game := ts.NewTexas(ts.BlindAlerterFunc(ts.StdOutAlerter), store)
+	game := ts.NewTexas(ts.BlindAlerterFunc(ts.Alerter), store)
 	cli := ts.NewCLI(os.Stdin, os.Stdout, game)
 
 	fmt.Println("Let's play a game")

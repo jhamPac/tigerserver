@@ -2,6 +2,7 @@ package tigerserver
 
 import (
 	"fmt"
+	"io/ioutil"
 	"testing"
 	"time"
 )
@@ -12,7 +13,7 @@ func TestGame_Start(t *testing.T) {
 		store := &StubPlayerStore{}
 		game := NewTexas(blindAlerter, store)
 
-		game.Start(5)
+		game.Start(5, ioutil.Discard)
 
 		cases := []scheduledAlert{
 			{at: 0 * time.Second, amount: 100},
@@ -36,7 +37,7 @@ func TestGame_Start(t *testing.T) {
 		store := &StubPlayerStore{}
 		game := NewTexas(ba, store)
 
-		game.Start(7)
+		game.Start(7, ioutil.Discard)
 
 		cases := []scheduledAlert{
 			{at: 0 * time.Second, amount: 100},

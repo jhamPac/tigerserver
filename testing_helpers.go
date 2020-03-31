@@ -51,7 +51,7 @@ type SpyBlindAlerter struct {
 }
 
 // ScheduleAlertAt schedules an alert for tracking
-func (s *SpyBlindAlerter) ScheduleAlertAt(duration time.Duration, amount int) {
+func (s *SpyBlindAlerter) ScheduleAlertAt(duration time.Duration, amount int, to io.Writer) {
 	s.alerts = append(s.alerts, scheduledAlert{duration, amount})
 }
 
@@ -63,7 +63,7 @@ type GameSpy struct {
 }
 
 // Start is GameSpy's version of starting a game
-func (g *GameSpy) Start(numberOfplayers int) {
+func (g *GameSpy) Start(numberOfplayers int, to io.Writer) {
 	g.StartCalled = true
 	g.StartedWith = numberOfplayers
 }
