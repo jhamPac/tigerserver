@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"net/http"
 
@@ -11,13 +12,15 @@ const dbFileName = "game.db.json"
 
 func main() {
 	store, close, err := ts.FileSystemPlayerStoreFromFile(dbFileName)
-
 	if err != nil {
 		log.Fatal(err)
 	}
 	defer close()
 
-	server := ts.CreateTigerServer(store)
+	server, err := ts.CreateTigerServer(store)
+	if err != nil {
+		fmt.Printf("TigerServer returned an error %v", err)
+	}
 
 	if err := http.ListenAndServe(":5000", server); err != nil {
 		log.Fatalf("could not listen on port 5000 %v", err)
