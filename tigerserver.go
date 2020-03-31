@@ -4,6 +4,8 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"path/filepath"
+	"runtime"
 	"text/template"
 
 	"github.com/gorilla/websocket"
@@ -34,7 +36,13 @@ var upgrader = websocket.Upgrader{
 	WriteBufferSize: 1024,
 }
 
-const htmlTemplatePath = "game.html"
+// get path to the root of this project
+var (
+	_, b, _, _ = runtime.Caller(0)
+	basepath   = filepath.Dir(b)
+)
+
+var htmlTemplatePath = basepath + "/game.html"
 
 // CreateTigerServer is the factory for the main server that creates and sets up routing too
 func CreateTigerServer(store PlayerStore) (*TigerServer, error) {
