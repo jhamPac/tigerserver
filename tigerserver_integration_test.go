@@ -16,7 +16,7 @@ func TestRecordingWinsAndRetrieveThem(t *testing.T) {
 		t.Fatalf("%v", err)
 	}
 
-	server := CreateTigerServer(store)
+	server, _ := CreateTigerServer(store)
 	player := "gambit"
 
 	server.ServeHTTP(httptest.NewRecorder(), newPostWinRequest(player))

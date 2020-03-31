@@ -18,7 +18,7 @@ func TestGETPlayers(t *testing.T) {
 		},
 	}
 
-	server := CreateTigerServer(&store)
+	server, _ := CreateTigerServer(&store)
 
 	t.Run("returns Casio's score", func(t *testing.T) {
 		request := newGetScoreRequest("Casio")
@@ -64,7 +64,7 @@ func TestGETPlayers(t *testing.T) {
 func TestStoreWins(t *testing.T) {
 	store := StubPlayerStore{map[string]int{}, []string{}, nil}
 
-	server := CreateTigerServer(&store)
+	server, _ := CreateTigerServer(&store)
 
 	t.Run("it records wins on POST", func(t *testing.T) {
 		player := "Casio"
@@ -88,7 +88,7 @@ func TestLeague(t *testing.T) {
 		}
 
 		store := StubPlayerStore{nil, nil, wantedLeague}
-		server := CreateTigerServer(&store)
+		server, _ := CreateTigerServer(&store)
 
 		request := newLeagueRequest()
 		response := httptest.NewRecorder()
@@ -106,7 +106,7 @@ func TestLeague(t *testing.T) {
 func TestGame(t *testing.T) {
 	t.Run("GET /game returns 200", func(t *testing.T) {
 		store := &StubPlayerStore{}
-		server := CreateTigerServer(store)
+		server, _ := CreateTigerServer(store)
 
 		request := newGameRequest()
 		response := httptest.NewRecorder()
@@ -119,7 +119,8 @@ func TestGame(t *testing.T) {
 	t.Run("when we get a message over a websocket it is a winner of a game", func(t *testing.T) {
 		store := &StubPlayerStore{}
 		winner := "Beast"
-		server := httptest.NewServer(CreateTigerServer(store))
+		ts, _ := CreateTigerServer(store)
+		server := httptest.NewServer(ts)
 		defer server.Close()
 
 		wsURL := "ws" + strings.TrimPrefix(server.URL, "http") + "/ws"
