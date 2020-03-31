@@ -34,7 +34,7 @@ var upgrader = websocket.Upgrader{
 	WriteBufferSize: 1024,
 }
 
-const htmlTemplatePath = "./game.html"
+const htmlTemplatePath = "game.html"
 
 // CreateTigerServer is the factory for the main server that creates and sets up routing too
 func CreateTigerServer(store PlayerStore) (*TigerServer, error) {

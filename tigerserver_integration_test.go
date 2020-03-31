@@ -8,10 +8,9 @@ import (
 
 func TestRecordingWinsAndRetrieveThem(t *testing.T) {
 	database, cleanDatabase := createTempFile(t, `[]`)
-
 	defer cleanDatabase()
-	store, err := NewFileSystemPlayerStore(database)
 
+	store, err := NewFileSystemPlayerStore(database)
 	if err != nil {
 		t.Fatalf("%v", err)
 	}
