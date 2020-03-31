@@ -13,6 +13,7 @@ import (
 type TigerServer struct {
 	store PlayerStore
 	http.Handler
+	template *template.Template
 }
 
 // PlayerStore for server methods
@@ -33,18 +34,30 @@ var upgrader = websocket.Upgrader{
 	WriteBufferSize: 1024,
 }
 
+const htmlTemplatePath = "./cmd/webserver/game.html"
+
 // CreateTigerServer is the factory for the main server that creates and sets up routing too
-func CreateTigerServer(store PlayerStore) *TigerServer {
+func CreateTigerServer(store PlayerStore) (*TigerServer, error) {
 	t := new(TigerServer)
+
+	tmpl, err := template.ParseFiles(htmlTemplatePath)
+	if err != nil {
+		return nil, fmt.Errorf("problem opening %s %v", htmlTemplatePath, err)
+	}
+
+	t.template = tmpl
 	t.store = store
+
 	router := http.NewServeMux()
 	router.Handle("/", http.HandlerFunc(t.homeHandler))
 	router.Handle("/league", http.HandlerFunc(t.leagueHandler))
 	router.Handle("/players/", http.HandlerFunc(t.playersHandler))
 	router.Handle("/game", http.HandlerFunc(t.game))
 	router.Handle("/ws", http.HandlerFunc(t.webSocket))
+
 	t.Handler = router
-	return t
+
+	return t, nil
 }
 
 func (t *TigerServer) homeHandler(w http.ResponseWriter, r *http.Request) {
@@ -73,13 +86,7 @@ func (t *TigerServer) processWin(w http.ResponseWriter, r *http.Request) {
 }
 
 func (t *TigerServer) game(w http.ResponseWriter, r *http.Request) {
-	tmpl, err := template.ParseFiles("./cmd/webserver/game.html")
-
-	if err != nil {
-		http.Error(w, fmt.Sprintf("problem loading template %s", err.Error()), http.StatusInternalServerError)
-	}
-
-	tmpl.Execute(w, nil)
+	t.template.Execute(w, nil)
 }
 
 func (t *TigerServer) webSocket(w http.ResponseWriter, r *http.Request) {
