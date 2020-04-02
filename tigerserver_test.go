@@ -3,7 +3,11 @@ package tigerserver
 import (
 	"net/http"
 	"net/http/httptest"
+	"strings"
 	"testing"
+	"time"
+
+	"github.com/gorilla/websocket"
 )
 
 func TestGETPlayers(t *testing.T) {
@@ -112,7 +116,26 @@ func TestGame(t *testing.T) {
 		assertStatus(t, response.Code, http.StatusOK)
 	})
 
-	t.Run("start a game with 3 players and declare Cable the winner", func(t *testing.T) {
+	t.Run("start game with 3 players and declare Cable the winner", func(t *testing.T) {
+		game := &GameSpy{}
+		store := &StubPlayerStore{}
+		winner := "Beast"
+		ts, _ := CreateTigerServer(store)
+		server := httptest.NewServer(ts)
+		wsURL := "ws" + strings.TrimPrefix(server.URL, "http") + "/ws"
+		ws, _, err := websocket.DefaultDialer.Dial(wsURL, nil)
+		if err != nil {
+			t.Fatalf("could not open a ws connection on %s %v", wsURL, err)
+		}
 
+		defer server.Close()
+		defer ws.Close()
+
+		writeWSMessage(t, ws, "3")
+		writeWSMessage(t, ws, winner)
+
+		time.Sleep(10 * time.Millisecond)
+		assertGameStartedWith(t, game, 3)
+		assertFinishCalledWith(t, game, winner)
 	})
 }

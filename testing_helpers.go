@@ -11,6 +11,8 @@ import (
 	"reflect"
 	"testing"
 	"time"
+
+	"github.com/gorilla/websocket"
 )
 
 // StubPlayerStore for mocking tests
@@ -173,5 +175,12 @@ func assertScoreEquals(t *testing.T, got, want int) {
 	t.Helper()
 	if got != want {
 		t.Errorf("got %d but wanted %d", got, want)
+	}
+}
+
+func writeWSMessage(t *testing.T, conn *websocket.Conn, message string) {
+	t.Helper()
+	if err := conn.WriteMessage(websocket.TextMessage, []byte(message)); err != nil {
+		t.Fatalf("Could not send message over ws connection %v", err)
 	}
 }
