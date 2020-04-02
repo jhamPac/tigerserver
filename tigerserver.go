@@ -37,7 +37,7 @@ var upgrader = websocket.Upgrader{
 	WriteBufferSize: 1024,
 }
 
-// get path to the root of this project
+// path to the root of this project
 var (
 	_, b, _, _       = runtime.Caller(0)
 	basepath         = filepath.Dir(b)
