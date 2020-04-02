@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"os"
 	"path/filepath"
 	"runtime"
 	"text/template"
@@ -38,11 +39,10 @@ var upgrader = websocket.Upgrader{
 
 // get path to the root of this project
 var (
-	_, b, _, _ = runtime.Caller(0)
-	basepath   = filepath.Dir(b)
+	_, b, _, _       = runtime.Caller(0)
+	basepath         = filepath.Dir(b)
+	htmlTemplatePath = basepath + "/game.html"
 )
-
-var htmlTemplatePath = basepath + "/game.html"
 
 // CreateTigerServer is the factory for the main server that creates and sets up routing too
 func CreateTigerServer(store PlayerStore) (*TigerServer, error) {
@@ -65,12 +65,13 @@ func CreateTigerServer(store PlayerStore) (*TigerServer, error) {
 
 	t.Handler = router
 
+	fmt.Fprintf(os.Stdout, "=: TigerServer := running!")
 	return t, nil
 }
 
 func (t *TigerServer) homeHandler(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
-	fmt.Fprint(w, "Welcome to Tiger Server!")
+	fmt.Fprint(w, "Welcome to =: Tiger Server :=")
 }
 
 func (t *TigerServer) leagueHandler(w http.ResponseWriter, r *http.Request) {
