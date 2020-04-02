@@ -76,6 +76,13 @@ func (g *GameSpy) Finish(winner string) {
 	g.FinishedWith = winner
 }
 
+func assertScoreEquals(t *testing.T, got, want int) {
+	t.Helper()
+	if got != want {
+		t.Errorf("got %d but wanted %d", got, want)
+	}
+}
+
 func assertStatus(t *testing.T, got, want int) {
 	t.Helper()
 	if got != want {
@@ -109,6 +116,42 @@ func assertScheduledAlert(t *testing.T, got, want ScheduledAlert) {
 	}
 }
 
+func assertResponseBody(t *testing.T, got, want string) {
+	t.Helper()
+	if got != want {
+		t.Errorf("response body is wrong, got %q wanted %q", got, want)
+	}
+}
+
+func assertLeague(t *testing.T, got, want []Player) {
+	t.Helper()
+	if !reflect.DeepEqual(got, want) {
+		t.Errorf("got %v wanted %v", got, want)
+	}
+}
+
+assertGameStartWith(t *testing.T, game *GameSpy, n int) {
+	t.Helper()
+	x := func() bool {
+		return game.StartedWith === n
+	}
+	passed := retryUntil(500*time.Millisecond, x)
+
+	if !passed {
+		t.Errorf("wanted Start called with %d but got %d", n, game.StartWidth)
+	}
+}
+
+func retryUntil(d time.Duration, f func() bool) bool {
+	dealine := time.Now().Add(d)
+	for time.Now().Before(deadline) {
+		if f() {
+			return true
+		}
+	}
+	return false
+}
+
 func newGetScoreRequest(name string) *http.Request {
 	req, _ := http.NewRequest(http.MethodGet, fmt.Sprintf("/players/%s", name), nil)
 	return req
@@ -122,31 +165,6 @@ func newPostWinRequest(name string) *http.Request {
 func newGameRequest() *http.Request {
 	req, _ := http.NewRequest(http.MethodGet, "/game", nil)
 	return req
-}
-
-func assertResponseBody(t *testing.T, got, want string) {
-	t.Helper()
-	if got != want {
-		t.Errorf("response body is wrong, got %q wanted %q", got, want)
-	}
-}
-
-func getLeagueFromResponse(t *testing.T, body io.Reader) (league []Player) {
-	t.Helper()
-	err := json.NewDecoder(body).Decode(&league)
-
-	if err != nil {
-		t.Fatalf("Unable to parse response from server %q into slice of Player, '%v'", body, err)
-	}
-
-	return
-}
-
-func assertLeague(t *testing.T, got, want []Player) {
-	t.Helper()
-	if !reflect.DeepEqual(got, want) {
-		t.Errorf("got %v wanted %v", got, want)
-	}
 }
 
 func newLeagueRequest() *http.Request {
@@ -172,11 +190,15 @@ func createTempFile(t *testing.T, initialData string) (*os.File, func()) {
 	return tmpfile, removeFile
 }
 
-func assertScoreEquals(t *testing.T, got, want int) {
+func getLeagueFromResponse(t *testing.T, body io.Reader) (league []Player) {
 	t.Helper()
-	if got != want {
-		t.Errorf("got %d but wanted %d", got, want)
+	err := json.NewDecoder(body).Decode(&league)
+
+	if err != nil {
+		t.Fatalf("Unable to parse response from server %q into slice of Player, '%v'", body, err)
 	}
+
+	return
 }
 
 func writeWSMessage(t *testing.T, conn *websocket.Conn, message string) {
