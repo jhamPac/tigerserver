@@ -15,7 +15,7 @@ func TestGame_Start(t *testing.T) {
 
 		game.Start(5, ioutil.Discard)
 
-		cases := []scheduledAlert{
+		cases := []ScheduledAlert{
 			{at: 0 * time.Second, amount: 100},
 			{at: 10 * time.Minute, amount: 200},
 			{at: 20 * time.Minute, amount: 300},
@@ -39,7 +39,7 @@ func TestGame_Start(t *testing.T) {
 
 		game.Start(7, ioutil.Discard)
 
-		cases := []scheduledAlert{
+		cases := []ScheduledAlert{
 			{at: 0 * time.Second, amount: 100},
 			{at: 12 * time.Minute, amount: 200},
 			{at: 24 * time.Minute, amount: 300},
@@ -61,7 +61,7 @@ func TestGame_Finish(t *testing.T) {
 	assertPlayerWin(t, store, winner)
 }
 
-func checkSchedulingCases(cases []scheduledAlert, t *testing.T, blindAlerter *SpyBlindAlerter) {
+func checkSchedulingCases(cases []ScheduledAlert, t *testing.T, blindAlerter *SpyBlindAlerter) {
 	for i, want := range cases {
 		t.Run(fmt.Sprint(want), func(t *testing.T) {
 			if len(blindAlerter.alerts) <= 1 {
