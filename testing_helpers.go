@@ -130,20 +130,20 @@ func assertLeague(t *testing.T, got, want []Player) {
 	}
 }
 
-assertGameStartWith(t *testing.T, game *GameSpy, n int) {
+func assertGameStartWith(t *testing.T, game *GameSpy, n int) {
 	t.Helper()
-	x := func() bool {
-		return game.StartedWith === n
+	predicate := func() bool {
+		return game.StartedWith == n
 	}
-	passed := retryUntil(500*time.Millisecond, x)
+	passed := retryUntil(500*time.Millisecond, predicate)
 
 	if !passed {
-		t.Errorf("wanted Start called with %d but got %d", n, game.StartWidth)
+		t.Errorf("wanted Start called with %d but got %d", n, game.StartedWith)
 	}
 }
 
 func retryUntil(d time.Duration, f func() bool) bool {
-	dealine := time.Now().Add(d)
+	deadline := time.Now().Add(d)
 	for time.Now().Before(deadline) {
 		if f() {
 			return true
