@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
+	"log"
 	"net/http"
 	"path/filepath"
 	"runtime"
@@ -32,6 +33,18 @@ type PlayerStore interface {
 type Player struct {
 	Name string
 	Wins int
+}
+
+type playerServerWS struct {
+	*websocket.Conn
+}
+
+func (w *playerServerWS) WaitForMsg() string {
+	_, msg, err := w.ReadMessage()
+	if err != nil {
+		log.Printf("error reading from websocket %v\n", err)
+	}
+	return string(msg)
 }
 
 var upgrader = websocket.Upgrader{
@@ -100,14 +113,23 @@ func (t *TigerServer) handleGame(w http.ResponseWriter, r *http.Request) {
 	t.template.Execute(w, nil)
 }
 
-func (t *TigerServer) webSocket(w http.ResponseWriter, r *http.Request) {
-	conn, _ := upgrader.Upgrade(w, r, nil)
-	_, winnerMsg, _ := conn.ReadMessage()
-	numberOfPlayers, _ := strconv.Atoi(string(winnerMsg))
-	t.game.Start(numberOfPlayers, ioutil.Discard)
+func newPlayerServerWS(w http.ResponseWriter, r *http.Request) *playerServerWS {
+	conn, err := upgrader.Upgrade(w, r, nil)
+	if err != nil {
+		log.Printf("problem upgrading connection to WebSockets %v\n", err)
+	}
+	return &playerServerWS{conn}
+}
 
-	_, winner, _ := conn.ReadMessage()
-	t.game.Finish(string(winner))
+func (t *TigerServer) webSocket(w http.ResponseWriter, r *http.Request) {
+	ws := newPlayerServerWS(w, r)
+
+	nMsg := ws.WaitForMsg()
+	nPlayers, _ := strconv.Atoi(nMsg)
+	t.game.Start(nPlayers, ioutil.Discard)
+
+	winner := ws.WaitForMsg()
+	t.game.Finish(winner)
 }
 
 func (t *TigerServer) showScore(w http.ResponseWriter, r *http.Request) {
