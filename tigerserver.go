@@ -3,9 +3,11 @@ package tigerserver
 import (
 	"encoding/json"
 	"fmt"
+	"io/ioutil"
 	"net/http"
 	"path/filepath"
 	"runtime"
+	"strconv"
 	"text/template"
 
 	"github.com/gorilla/websocket"
@@ -16,6 +18,7 @@ type TigerServer struct {
 	store PlayerStore
 	http.Handler
 	template *template.Template
+	game     Game
 }
 
 // PlayerStore for server methods
@@ -44,7 +47,7 @@ var (
 )
 
 // CreateTigerServer is the factory for the main server that creates and sets up routing too
-func CreateTigerServer(store PlayerStore) (*TigerServer, error) {
+func CreateTigerServer(store PlayerStore, game Game) (*TigerServer, error) {
 	t := new(TigerServer)
 
 	tmpl, err := template.ParseFiles(htmlTemplatePath)
@@ -54,12 +57,13 @@ func CreateTigerServer(store PlayerStore) (*TigerServer, error) {
 
 	t.template = tmpl
 	t.store = store
+	t.game = game
 
 	router := http.NewServeMux()
 	router.Handle("/", http.HandlerFunc(t.homeHandler))
 	router.Handle("/league", http.HandlerFunc(t.leagueHandler))
 	router.Handle("/players/", http.HandlerFunc(t.playersHandler))
-	router.Handle("/game", http.HandlerFunc(t.game))
+	router.Handle("/game", http.HandlerFunc(t.handleGame))
 	router.Handle("/ws", http.HandlerFunc(t.webSocket))
 
 	t.Handler = router
@@ -92,14 +96,18 @@ func (t *TigerServer) processWin(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusAccepted)
 }
 
-func (t *TigerServer) game(w http.ResponseWriter, r *http.Request) {
+func (t *TigerServer) handleGame(w http.ResponseWriter, r *http.Request) {
 	t.template.Execute(w, nil)
 }
 
 func (t *TigerServer) webSocket(w http.ResponseWriter, r *http.Request) {
 	conn, _ := upgrader.Upgrade(w, r, nil)
 	_, winnerMsg, _ := conn.ReadMessage()
-	t.store.RecordWin(string(winnerMsg))
+	numberOfPlayers, _ := strconv.Atoi(string(winnerMsg))
+	t.game.Start(numberOfPlayers, ioutil.Discard)
+
+	_, winner, _ := conn.ReadMessage()
+	t.game.Finish(string(winner))
 }
 
 func (t *TigerServer) showScore(w http.ResponseWriter, r *http.Request) {

@@ -10,6 +10,8 @@ import (
 	"github.com/gorilla/websocket"
 )
 
+var dummyGame = &GameSpy{}
+
 func TestGETPlayers(t *testing.T) {
 	store := StubPlayerStore{
 		scores: map[string]int{
@@ -18,7 +20,7 @@ func TestGETPlayers(t *testing.T) {
 		},
 	}
 
-	server, _ := CreateTigerServer(&store)
+	server, _ := CreateTigerServer(&store, dummyGame)
 
 	t.Run("returns Casio's score", func(t *testing.T) {
 		request := newGetScoreRequest("Casio")
@@ -64,7 +66,7 @@ func TestGETPlayers(t *testing.T) {
 func TestStoreWins(t *testing.T) {
 	store := StubPlayerStore{map[string]int{}, []string{}, nil}
 
-	server, _ := CreateTigerServer(&store)
+	server, _ := CreateTigerServer(&store, dummyGame)
 
 	t.Run("it records wins on POST", func(t *testing.T) {
 		player := "Casio"
@@ -88,7 +90,7 @@ func TestLeague(t *testing.T) {
 		}
 
 		store := StubPlayerStore{nil, nil, wantedLeague}
-		server, _ := CreateTigerServer(&store)
+		server, _ := CreateTigerServer(&store, dummyGame)
 
 		request := newLeagueRequest()
 		response := httptest.NewRecorder()
@@ -106,7 +108,7 @@ func TestLeague(t *testing.T) {
 func TestGame(t *testing.T) {
 	t.Run("GET /game returns 200", func(t *testing.T) {
 		store := &StubPlayerStore{}
-		server, _ := CreateTigerServer(store)
+		server, _ := CreateTigerServer(store, dummyGame)
 
 		request := newGameRequest()
 		response := httptest.NewRecorder()
@@ -116,11 +118,11 @@ func TestGame(t *testing.T) {
 		assertStatus(t, response.Code, http.StatusOK)
 	})
 
-	t.Run("start game with 3 players and declare Cable the winner", func(t *testing.T) {
+	t.Run("start game with 3 players and declare Beast the winner", func(t *testing.T) {
 		game := &GameSpy{}
 		store := &StubPlayerStore{}
 		winner := "Beast"
-		ts, _ := CreateTigerServer(store)
+		ts, _ := CreateTigerServer(store, game)
 		server := httptest.NewServer(ts)
 		wsURL := "ws" + strings.TrimPrefix(server.URL, "http") + "/ws"
 		ws, _, err := websocket.DefaultDialer.Dial(wsURL, nil)
