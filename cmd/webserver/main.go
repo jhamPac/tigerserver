@@ -5,21 +5,21 @@ import (
 	"log"
 	"net/http"
 
-	ts "github.com/jhampac/tigerserver"
+	"github.com/jhampac/tigerserver"
 )
 
 const dbFileName = "game.db.json"
 
 func main() {
-	store, close, err := ts.FileSystemPlayerStoreFromFile(dbFileName)
+	store, close, err := tigerserver.FileSystemPlayerStoreFromFile(dbFileName)
 	if err != nil {
 		log.Fatal(err)
 	}
 	defer close()
 
-	game := ts.NewTexas(ts.BlindAlerterFunc(ts.Alerter), store)
+	game := tigerserver.NewTexas(tigerserver.BlindAlerterFunc(tigerserver.Alerter), store)
 
-	server, err := ts.CreateTigerServer(store, game)
+	server, err := tigerserver.New(store, game)
 	if err != nil {
 		fmt.Printf("TigerServer returned an error %v", err)
 	}

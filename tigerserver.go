@@ -59,8 +59,8 @@ var (
 	htmlTemplatePath = basepath + "/game.html"
 )
 
-// CreateTigerServer is the factory for the main server that creates and sets up routing too
-func CreateTigerServer(store PlayerStore, game Game) (*TigerServer, error) {
+// New creates an initialized TigerServer
+func New(store PlayerStore, game Game) (*TigerServer, error) {
 	t := new(TigerServer)
 
 	tmpl, err := template.ParseFiles(htmlTemplatePath)
