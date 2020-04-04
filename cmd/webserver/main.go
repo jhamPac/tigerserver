@@ -17,7 +17,9 @@ func main() {
 	}
 	defer close()
 
-	server, err := ts.CreateTigerServer(store)
+	game := ts.NewTexas(ts.BlindAlerterFunc(ts.Alerter), store)
+
+	server, err := ts.CreateTigerServer(store, game)
 	if err != nil {
 		fmt.Printf("TigerServer returned an error %v", err)
 	}
