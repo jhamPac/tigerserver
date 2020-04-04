@@ -130,7 +130,7 @@ func assertLeague(t *testing.T, got, want []Player) {
 	}
 }
 
-func assertGameStartWith(t *testing.T, game *GameSpy, n int) {
+func assertGameStartedWith(t *testing.T, game *GameSpy, n int) {
 	t.Helper()
 	predicate := func() bool {
 		return game.StartedWith == n
@@ -150,6 +150,17 @@ func retryUntil(d time.Duration, f func() bool) bool {
 		}
 	}
 	return false
+}
+
+func assertFinishCalledWith(t *testing.T, game *GameSpy, winner string) {
+	t.Helper()
+	passed := retryUntil(500*time.Millisecond, func() bool {
+		return game.FinishedWith == winner
+	})
+
+	if !passed {
+		t.Errorf("expected finish called with %q but got %q", winner, game.FinishedWith)
+	}
 }
 
 func newGetScoreRequest(name string) *http.Request {
