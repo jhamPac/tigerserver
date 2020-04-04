@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
-	"os"
 	"path/filepath"
 	"runtime"
 	"text/template"
@@ -65,7 +64,6 @@ func CreateTigerServer(store PlayerStore) (*TigerServer, error) {
 
 	t.Handler = router
 
-	fmt.Fprintf(os.Stdout, "=: TigerServer := running!")
 	return t, nil
 }
 
