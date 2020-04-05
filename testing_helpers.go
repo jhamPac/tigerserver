@@ -60,15 +60,19 @@ func (s ScheduledAlert) String() string {
 
 // GameSpy is a mock for testing the Game interface
 type GameSpy struct {
-	StartCalled  bool
-	StartedWith  int
-	FinishedWith string
+	StartCalled bool
+	StartedWith int
+	BlindAlert  []byte
+
+	FinishedCalled bool
+	FinishedWith   string
 }
 
 // Start is GameSpy's version of starting a game
 func (g *GameSpy) Start(numberOfplayers int, to io.Writer) {
 	g.StartCalled = true
 	g.StartedWith = numberOfplayers
+	to.Write(g.BlindAlert)
 }
 
 // Finish is GameSpy's version fo Finish and recording a winner

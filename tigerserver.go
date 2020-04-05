@@ -3,7 +3,6 @@ package tigerserver
 import (
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
 	"log"
 	"net/http"
 	"path/filepath"
@@ -45,6 +44,14 @@ func (w *playerServerWS) WaitForMsg() string {
 		log.Printf("error reading from websocket %v\n", err)
 	}
 	return string(msg)
+}
+
+func (w *playerServerWS) Write(p []byte) (n int, err error) {
+	if err := w.WriteMessage(1, p); err != nil {
+		return 0, err
+	}
+
+	return len(p), nil
 }
 
 var upgrader = websocket.Upgrader{
@@ -126,7 +133,7 @@ func (t *TigerServer) webSocket(w http.ResponseWriter, r *http.Request) {
 
 	nMsg := ws.WaitForMsg()
 	nPlayers, _ := strconv.Atoi(nMsg)
-	t.game.Start(nPlayers, ioutil.Discard)
+	t.game.Start(nPlayers, ws)
 
 	winner := ws.WaitForMsg()
 	t.game.Finish(winner)
