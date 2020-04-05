@@ -223,6 +223,13 @@ func writeWSMessage(t *testing.T, conn *websocket.Conn, message string) {
 	}
 }
 
+func assertWebsocketGotMsg(t *testing.T, ws *websocket.Conn, want string) {
+	_, msg, _ := ws.ReadMessage()
+	if string(msg) != want {
+		t.Errorf(`got "%s" but wanted "%s"`, string(msg), want)
+	}
+}
+
 func within(t *testing.T, d time.Duration, assert func()) {
 	t.Helper()
 
